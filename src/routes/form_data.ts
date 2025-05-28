@@ -19,7 +19,7 @@ async function formDataRoutes(app: FastifyInstance) {
         const formData = await prisma.formData.findMany({})
         reply.send({
           total: formData.length,
-          formData,
+          formData, 
         })
       } catch (err: any) {
         log.error({ err }, err.message)

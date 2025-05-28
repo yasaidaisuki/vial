@@ -11,9 +11,23 @@ datasource db {
 }
 
 model FormData {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  question  String
-  answer    String
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question String
+  answer   String
+  query    QueryData?
 
   @@map("form_data")
+}
+
+model QueryData {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  status      String   @default("OPEN")
+  formData    FormData @relation(fields: [formDataID], references: [id])
+  formDataID  String   @unique @db.Uuid
+  
+  @@map("query_data")
 }
