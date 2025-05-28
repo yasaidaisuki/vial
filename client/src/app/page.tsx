@@ -4,6 +4,8 @@ import axios from "axios";
 
 export default async function Home() {
 
+  // fetch overhead data using axios
+  // done in the page to reduce client-side fetching
   const data = await axios
         .get("http://localhost:8080/form-data") // your Fastify backend endpoint
         .then((response) => {
@@ -11,9 +13,11 @@ export default async function Home() {
         })
         .catch((err) => console.log("error"));
 
+  console.log(data)
+
   return (
     <div className="w-full h-full">
-      {data ? <TableView data={data.data}/> : null }
+      {data ? <TableView data={data.data?.formData}/> : null }
     </div>
   );
 }

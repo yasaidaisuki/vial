@@ -4,12 +4,31 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+export interface IQueryData {
+  id: string
+  title: string
+  description: string | null
+  createdAt: string
+  updatedAt: string
+  status: string
+  formDataID: string
+}
+export interface IFormData {
+  id: string
+  question: string
+  answer: string
+  query: IQueryData | null
+}
 
-export default function TableView({ data }: any) {
+interface TableViewProps {
+  data: IFormData[]
+}
+
+
+export default function TableView({ data } : TableViewProps) {
+  console.log(data)
   // extract data
-  const [formData, setFormData] = useState<any>(data?.formData);
-
-  console.log(formData);
+  const [formData, setFormData] = useState<IFormData[]>(data);
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -17,9 +36,8 @@ export default function TableView({ data }: any) {
         <div className="flex flex-row justify-between md:lg:pl-6 md:lg:pr-6">
           <label>FIELDS</label>
 
-          <div className="flex flex-row gap-5 md:lg:gap-20 justify-end">
-            <label>CRA</label>
-            <label>DM</label>
+          <div className="flex flex-row gap-5 md:lg:gap-28 justify-end">
+            <label>ANSWER</label>
             <label>QUERIES</label>
           </div>
         </div>
