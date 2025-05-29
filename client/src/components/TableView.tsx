@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label";
 
 export interface IQueryData {
@@ -56,65 +57,6 @@ export default function TableView({ data }: TableViewProps) {
     setDialogOpenIndex(null);
   };
 
-  const CreateQueryModal = ({
-  index,
-  dataObject,
-}: {
-  index: number;
-  dataObject: IFormData;
-}) => {
-  return (
-    <Dialog
-      open={dialogOpenIndex === index}
-      onOpenChange={(open) => setDialogOpenIndex(open ? index : null)}
-    >
-      <DialogTrigger asChild>
-        <Button className="w-10 h-10 text-white hover:bg-gray-600">
-          +
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Query</DialogTitle>
-          <DialogDescription>Fill in details for this field</DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="title" className="text-right">
-              Title
-            </Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="desc" className="text-right">
-              Description
-            </Label>
-            <Input
-              id="desc"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button onClick={() => handleSubmit(dataObject.id)} type="submit">
-            Save
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-
   return (
     <div className="flex flex-col w-full h-full">
       <div className="flex w-full flex-col justify-between gap-5 p-5">
@@ -140,7 +82,45 @@ export default function TableView({ data }: TableViewProps) {
                 <div className="flex flex-row gap-10 items-center">
                   <div className="content-center">{dataObject.answer}</div>
 
-                  <CreateQueryModal key={key} dataObject={dataObject}/>
+                  <Dialog
+                    open={dialogOpenIndex === key}
+                    onOpenChange={(open) =>
+                      setDialogOpenIndex(open ? key : null)
+                    }
+                  >
+                    <DialogTrigger asChild>
+                      <Button className="w-10 h-10 bg-black text-white hover:bg-gray-600">
+                        +
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Create Query</DialogTitle>
+                        <DialogDescription>
+                          {dataObject.question}
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <div className="grid gap-4 py-4">
+                        <div className="flex items-center justify-center w-full">
+                          <Textarea 
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Type your message here." />
+                        </div>
+                      </div>
+
+                      <DialogFooter>
+                        <Button
+                          onClick={() => handleSubmit(dataObject.id)}
+                          type="submit"
+                        >
+                          Save
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
                 </div>
               </div>
             </div>
