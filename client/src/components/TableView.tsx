@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { stat } from "fs";
 
 export interface IQueryData {
   id: string;
@@ -39,18 +41,31 @@ export default function TableView({ data }: TableViewProps) {
   const [formData, setFormData] = useState<IFormData[]>(data);
   const [dialogOpenIndex, setDialogOpenIndex] = useState<number | null>(null);
 
+  console.log(formData);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (formDataID: string) => {
-    console.log("Submitted:", { title, description, formDataID });
+  const handleSubmit = async (dataObject: IFormData) => {
 
-    // Example axios call:
-    // await axios.post("/api/your-endpoint", {
-    //   title,
-    //   description,
-    //   formDataID
-    // });
+    // create current date object
+    const currDate = new Date();
+
+    try {
+      const data = await axios.post('http://localhost:8080/', {
+          title: dataObject.question,
+          description: description,
+          status: "OPEN",
+          formData: dataObject,
+          formDataId: dataObject.id,
+          createdAt: currDate,
+          updatedAt: currDate,
+      });
+
+      console.log("Submitted:", { title, description });
+    } catch (error) {
+      console.error(error);
+    }
 
     setTitle("");
     setDescription("");
@@ -77,14 +92,15 @@ export default function TableView({ data }: TableViewProps) {
               key={key}
               className="flex flex-col justify-between content-center py-3 border-[0.1vh] pl-5"
             >
-
               <div className="flex flex-row gap-5 pl-2 pr-2 md:lg:pl-6 md:lg:pr-6 justify-between">
                 <div className="max-w-[200px] md:lg:max-w-[500px] truncate content-center">
                   {dataObject.question}
                 </div>
 
                 <div className="flex flex-row gap-16 md:lg:gap-10 items-center justify-between md:lg:w-1/3">
-                  <div className="content-center max-w-[40px] md:lg:max-w-[350px] truncate font-medium">{dataObject.answer}</div>
+                  <div className="content-center max-w-[40px] md:lg:max-w-[350px] truncate font-medium">
+                    {dataObject.answer}
+                  </div>
 
                   {/* when formData does not have an existing query */}
                   {!dataObject.query && (
@@ -119,7 +135,7 @@ export default function TableView({ data }: TableViewProps) {
 
                         <DialogFooter>
                           <Button
-                            onClick={() => handleSubmit(dataObject.id)}
+                            onClick={() => handleSubmit(dataObject)}
                             type="submit"
                           >
                             Save
