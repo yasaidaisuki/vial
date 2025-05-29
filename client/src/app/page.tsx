@@ -13,11 +13,9 @@ export default async function Home() {
         })
         .catch((err) => console.log("error"));
 
-  console.log(data)
-
   return (
     <div className="w-full h-full">
-      {data ? <TableView data={data.data?.formData}/> : null }
+      {data ? <TableView data={data.data.formData}/> : null }
     </div>
   );
 }
