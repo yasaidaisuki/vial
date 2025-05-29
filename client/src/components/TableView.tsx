@@ -63,7 +63,7 @@ export default function TableView({ data }: TableViewProps) {
         <div>
           <div className="flex flex-row justify-between md:lg:pl-6 md:lg:pr-6 p-5">
             <label className="font-semibold text-stone-500">FIELDS</label>
-            <div className="flex flex-row gap-5 md:lg:gap-36 justify-end">
+            <div className="flex flex-row gap-5 w-1/4 md:lg:w-1/2 md:lg:gap-48 justify-end">
               <label className="font-semibold text-stone-500">ANSWER</label>
               <label className="font-semibold text-stone-500">QUERIES</label>
             </div>
@@ -79,12 +79,12 @@ export default function TableView({ data }: TableViewProps) {
             >
 
               <div className="flex flex-row gap-5 pl-2 pr-2 md:lg:pl-6 md:lg:pr-6 justify-between">
-                <div className="max-w-[100px] md:lg:max-w-[500px] truncate content-center">
+                <div className="max-w-[200px] md:lg:max-w-[500px] truncate content-center">
                   {dataObject.question}
                 </div>
 
-                <div className="flex flex-row gap-10 items-center justify-between">
-                  <div className="content-center ">{dataObject.answer}</div>
+                <div className="flex flex-row gap-16 md:lg:gap-10 items-center justify-between md:lg:w-1/3">
+                  <div className="content-center max-w-[40px] md:lg:max-w-[350px] truncate">{dataObject.answer}</div>
 
                   {/* when formData does not have an existing query */}
                   {!dataObject.query && (
