@@ -14,7 +14,7 @@ const buttonVariants = cva(
         open:
           "bg-[#8BC5C4] text-primary-foreground shadow-xs hover:bg-[#74a3a2] transition-all",
         resolved:
-          "bg-[#247B7B] text-primary-foreground shadow-xs hover:bg-[#1d6363] transition-all",
+          "bg-emerald-600 text-primary-foreground shadow-xs hover:bg-emerald-800  transition-all",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:

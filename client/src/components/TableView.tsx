@@ -206,8 +206,10 @@ export default function TableView({ data }: TableViewProps) {
                       }
                     >
                       <DialogTrigger asChild>
-                        <Button className="w-7 h-8 rounded-full bg-red-400 text-white hover:bg-red-500">
-                          <i className="fa-solid fa-question"></i>
+                        <Button 
+                          variant={"resolved"}
+                          className="w-7 h-8 rounded-full">
+                          <i className="fa-solid fa-check"></i>
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
