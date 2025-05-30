@@ -11,18 +11,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import axios from "axios";
-import { stat } from "fs";
-
 export interface IQueryData {
   id: string;
   title: string;
   description: string | null;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   status: string;
   formDataID: string;
 }
@@ -46,23 +51,31 @@ export default function TableView({ data }: TableViewProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = async (dataObject: IFormData) => {
+  function formatDate(date: Date | string): string {
+    const parsedDate = new Date(date); // handles both Date and ISO string input
+    return `${parsedDate.getFullYear()}/${String(
+      parsedDate.getMonth() + 1
+    ).padStart(2, "0")}/${String(parsedDate.getDate()).padStart(2, "0")}`;
+  }
 
-    // create current date object
-    const currDate = new Date();
-
+  async function handleSubmit(dataObject: IFormData) {
     try {
-      const data = await axios.post('http://localhost:8080/', {
-          title: dataObject.question,
-          description: description,
-          status: "OPEN",
-          formData: dataObject,
-          formDataId: dataObject.id,
-          createdAt: currDate,
-          updatedAt: currDate,
+      const currDate = new Date();
+
+      const data = await axios.post("http://localhost:8080/create-query", {
+        title: dataObject.question,
+        description: description,
+        createdAt: currDate,
+        updatedAt: currDate,
+        status: "OPEN",
+        formData: dataObject,
+        formDataId: dataObject.id,
       });
 
-      console.log("Submitted:", { title, description });
+      console.log("Submitted:", {
+        title: dataObject.question,
+        description: description,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -70,7 +83,7 @@ export default function TableView({ data }: TableViewProps) {
     setTitle("");
     setDescription("");
     setDialogOpenIndex(null);
-  };
+  }
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -102,6 +115,72 @@ export default function TableView({ data }: TableViewProps) {
                     {dataObject.answer}
                   </div>
 
+                  {/* existing "OPEN" query */}
+                  {dataObject.query && dataObject.query.status === "OPEN" && (
+                    <Dialog
+                      open={dialogOpenIndex === key}
+                      onOpenChange={(open) =>
+                        setDialogOpenIndex(open ? key : null)
+                      }
+                    >
+                      <DialogTrigger asChild>
+                        <Button className="w-10 h-10 rounded-2xl bg-red-400 text-white hover:bg-red-500">
+                          <i className="fa-solid fa-question"></i>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>| Query </DialogTitle>
+                          <DialogDescription>
+                            {dataObject.question}
+                          </DialogDescription>
+                          <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
+                        </DialogHeader>
+
+                        <div className="flex flex-row gap-4 justify-center md:lg:justify-start">
+                          {/* query status */}
+                          <div className="flex flex-col">
+                            <DialogDescription>Query Status</DialogDescription>
+                            <div className="text-[2.1vh]">{dataObject.query.status}</div>
+                          </div>
+
+                          {/* query created date*/}
+                          <div className="flex flex-col">
+                            <DialogDescription>Created on</DialogDescription>
+                            <div className="text-[2.1vh]">{formatDate(dataObject.query.createdAt)}</div>
+                          </div>
+
+                          {/* query updated date*/}
+                          <div className="flex flex-col">
+                            <DialogDescription>Updated on</DialogDescription>
+                            <div className="text-[2.1vh]">{formatDate(dataObject.query.updatedAt)}</div>
+                          </div>
+                        </div>
+
+                        <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
+
+                        <div className="flex flex-col gap-1">
+                          <div className="font-medium">Description</div>
+                          <div className="text-[2.1vh] text-stone-700 py-2">
+                            {dataObject.query.description}
+                          </div>
+                        </div>
+
+                        <DialogFooter>
+                          <Button
+                            className="bg-emerald-600 hover:bg-emerald-800 text-white"
+                            onClick={() => handleSubmit(dataObject)}
+                            type="submit"
+                          >
+                            Resolve
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+
+                  {/* existing "RESOLVED" query*/}
+
                   {/* when formData does not have an existing query */}
                   {!dataObject.query && (
                     <Dialog
@@ -111,8 +190,8 @@ export default function TableView({ data }: TableViewProps) {
                       }
                     >
                       <DialogTrigger asChild>
-                        <Button className="w-10 h-10 bg-black text-white hover:bg-gray-600">
-                          +
+                        <Button className="w-10 h-10 rounded-2xl bg-slate-800 text-white hover:bg-sky-900">
+                          <i className="fa-solid fa-plus"></i>
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
@@ -121,6 +200,7 @@ export default function TableView({ data }: TableViewProps) {
                           <DialogDescription>
                             {dataObject.question}
                           </DialogDescription>
+                          <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
                         </DialogHeader>
 
                         <div className="grid gap-4 py-2">
@@ -138,7 +218,7 @@ export default function TableView({ data }: TableViewProps) {
                             onClick={() => handleSubmit(dataObject)}
                             type="submit"
                           >
-                            Save
+                            Create Query
                           </Button>
                         </DialogFooter>
                       </DialogContent>
