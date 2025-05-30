@@ -9,13 +9,13 @@ export default async function Home() {
   const data = await axios
         .get("http://localhost:8080/form-data") // your Fastify backend endpoint
         .then((response) => {
-          return response.data
+          return response.data.data.formData
         })
         .catch((err) => console.log("error"));
 
   return (
     <div className="w-full h-full">
-      {data ? <TableView data={data.data.formData}/> : null }
+      {data ? <TableView data={data}/> : null }
     </div>
   );
 }

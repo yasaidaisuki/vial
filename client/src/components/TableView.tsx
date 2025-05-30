@@ -58,6 +58,18 @@ export default function TableView({ data }: TableViewProps) {
     ).padStart(2, "0")}/${String(parsedDate.getDate()).padStart(2, "0")}`;
   }
 
+  async function fetchData() {
+    // fetch overhead data using axios
+    // done in the page to reduce client-side fetching
+    const data = await axios
+      .get("http://localhost:8080/form-data") // your Fastify backend endpoint
+      .then((response) => {
+        return response.data.data.formData;
+      })
+      .catch((err) => console.log("error"));
+      return data
+  }
+
   async function handleResolve(dataObject: IFormData) {
     try {
       const currDate = new Date();
@@ -68,10 +80,15 @@ export default function TableView({ data }: TableViewProps) {
         status: "RESOLVED",
       });
 
-      console.log(data)
-    } catch(error) {
-      console.error(error)
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      return
     }
+    
+    const data = await fetchData();
+    setFormData(data);
+
   }
 
   async function handleCreate(dataObject: IFormData) {
@@ -95,6 +112,9 @@ export default function TableView({ data }: TableViewProps) {
     } catch (error) {
       console.error(error);
     }
+
+    const data = await fetchData();
+    setFormData(data);
 
     setTitle("");
     setDescription("");
@@ -132,7 +152,7 @@ export default function TableView({ data }: TableViewProps) {
                   </div>
 
                   {/* existing "OPEN" query */}
-                  {dataObject.query && dataObject.query.status === "OPEN" && (
+                  {dataObject.query && (
                     <Dialog
                       open={dialogOpenIndex === key}
                       onOpenChange={(open) =>
@@ -140,77 +160,22 @@ export default function TableView({ data }: TableViewProps) {
                       }
                     >
                       <DialogTrigger asChild>
-                        <Button 
-                          variant={"open"}
-                          className="w-7 h-8 rounded-full">
-                          <i className="fa-solid fa-question"></i>
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>| Query </DialogTitle>
-                          <DialogDescription>
-                            {dataObject.question}
-                          </DialogDescription>
-                          <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
-                        </DialogHeader>
-
-                        <div className="flex flex-row gap-4 justify-center md:lg:justify-start">
-                          {/* query status */}
-                          <div className="flex flex-col">
-                            <DialogDescription>Query Status</DialogDescription>
-                            <div className="text-[2.1vh]">{dataObject.query.status}</div>
-                          </div>
-
-                          {/* query created date*/}
-                          <div className="flex flex-col">
-                            <DialogDescription>Created on</DialogDescription>
-                            <div className="text-[2.1vh]">{formatDate(dataObject.query.createdAt)}</div>
-                          </div>
-
-                          {/* query updated date*/}
-                          <div className="flex flex-col">
-                            <DialogDescription>Updated on</DialogDescription>
-                            <div className="text-[2.1vh]">{formatDate(dataObject.query.updatedAt)}</div>
-                          </div>
-                        </div>
-
-                        <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
-
-                        <div className="flex flex-col gap-1">
-                          <div className="font-medium">Description</div>
-                          <div className="text-[2.1vh] text-stone-700 py-2">
-                            {dataObject.query.description}
-                          </div>
-                        </div>
-
-                        <DialogFooter>
+                        {/* render based on resolved or open */}
+                        {dataObject.query.status === "RESOLVED" ? (
                           <Button
-                            className="bg-emerald-600 hover:bg-emerald-800 text-white"
-                            onClick={() => handleResolve(dataObject)}
-                            type="submit"
+                            variant={"resolved"}
+                            className="w-7 h-8 rounded-full"
                           >
-                            Resolve
+                            <i className="fa-solid fa-check"></i>
                           </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-
-                  {/* existing "RESOLVED" query*/}
-                  {dataObject.query && dataObject.query.status === "RESOLVED" && (
-                    <Dialog
-                      open={dialogOpenIndex === key}
-                      onOpenChange={(open) =>
-                        setDialogOpenIndex(open ? key : null)
-                      }
-                    >
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant={"resolved"}
-                          className="w-7 h-8 rounded-full">
-                          <i className="fa-solid fa-check"></i>
-                        </Button>
+                        ) : (
+                          <Button
+                            variant={"open"}
+                            className="w-7 h-8 rounded-full"
+                          >
+                            <i className="fa-solid fa-question"></i>
+                          </Button>
+                        )}
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -225,19 +190,33 @@ export default function TableView({ data }: TableViewProps) {
                           {/* query status */}
                           <div className="flex flex-col">
                             <DialogDescription>Query Status</DialogDescription>
-                            <div className="text-[2.1vh]">{dataObject.query.status}</div>
+
+                            <div className="flex flex-row items-center gap-1">
+                              <div
+                                className={`w-[1.2vh] h-[1.2vh] ${
+                                  dataObject.query.status === "RESOLVED"
+                                    ? "bg-emerald-500"
+                                    : "bg-[#8BC5C4]"
+                                } rounded-full`}
+                              ></div>
+                              <div>{dataObject.query.status}</div>
+                            </div>
                           </div>
 
                           {/* query created date*/}
                           <div className="flex flex-col">
                             <DialogDescription>Created on</DialogDescription>
-                            <div className="text-[2.1vh]">{formatDate(dataObject.query.createdAt)}</div>
+                            <div className="text-[2.1vh]">
+                              {formatDate(dataObject.query.createdAt)}
+                            </div>
                           </div>
 
                           {/* query updated date*/}
                           <div className="flex flex-col">
                             <DialogDescription>Updated on</DialogDescription>
-                            <div className="text-[2.1vh]">{formatDate(dataObject.query.updatedAt)}</div>
+                            <div className="text-[2.1vh]">
+                              {formatDate(dataObject.query.updatedAt)}
+                            </div>
                           </div>
                         </div>
 
@@ -251,6 +230,16 @@ export default function TableView({ data }: TableViewProps) {
                         </div>
 
                         <DialogFooter>
+                          {/* render based on open or resolved */}
+                          {dataObject.query.status === "OPEN" && (
+                            <Button
+                              className="bg-emerald-600 hover:bg-emerald-800 text-white"
+                              onClick={() => handleResolve(dataObject)}
+                              type="submit"
+                            >
+                              Resolve
+                            </Button>
+                          )}
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
@@ -265,9 +254,10 @@ export default function TableView({ data }: TableViewProps) {
                       }
                     >
                       <DialogTrigger asChild>
-                        <Button 
+                        <Button
                           variant={"create"}
-                          className="w-7 h-8 rounded-full ">
+                          className="w-7 h-8 rounded-full "
+                        >
                           <i className="fa-solid fa-plus"></i>
                         </Button>
                       </DialogTrigger>
