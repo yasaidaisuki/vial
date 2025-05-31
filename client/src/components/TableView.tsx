@@ -57,6 +57,23 @@ export default function TableView({ data }: TableViewProps) {
       return [];
     }
   }
+  async function handleDelete(dataObject: IFormData) {
+    try {
+      await axios.delete("http://localhost:8080/delete-query", {
+        data: {
+          queryDataId: dataObject.query?.id,
+        },
+      });
+
+      const updatedData = await fetchData();
+      setFormData(updatedData);
+
+      // Close the modal by resetting dialogOpenIndex
+      setDialogOpenIndex(null);
+    } catch (error) {
+      console.error("Error resolving query:", error);
+    }
+  }
 
   async function handleResolve(dataObject: IFormData) {
     try {
@@ -167,34 +184,50 @@ export default function TableView({ data }: TableViewProps) {
                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                           </DialogHeader>
 
-                          <div className="flex flex-row gap-4 justify-center md:lg:justify-start">
-                            <div className="flex flex-col">
-                              <DialogDescription>Query Status</DialogDescription>
-                              <div className="flex flex-row items-center gap-1">
-                                <div
-                                  className={`w-[1.2vh] h-[1.2vh] ${
-                                    dataObject.query.status === "RESOLVED"
-                                      ? "bg-emerald-500"
-                                      : "bg-[#8BC5C4]"
-                                  } rounded-full`}
-                                ></div>
-                                <div>{dataObject.query.status}</div>
+                          <div className="flex flex-col md:lg:flex-row gap-4 justify-center md:lg:justify-between">
+                            <div className="flex flex-row gap-4 justify-center">
+                              <div className="flex flex-col">
+                                <DialogDescription>
+                                  Query Status
+                                </DialogDescription>
+                                <div className="flex flex-row items-center gap-1">
+                                  <div
+                                    className={`w-[1.2vh] h-[1.2vh] ${
+                                      dataObject.query.status === "RESOLVED"
+                                        ? "bg-emerald-500"
+                                        : "bg-[#8BC5C4]"
+                                    } rounded-full`}
+                                  ></div>
+                                  <div>{dataObject.query.status}</div>
+                                </div>
+                              </div>
+
+                              <div className="flex flex-col">
+                                <DialogDescription>
+                                  Created on
+                                </DialogDescription>
+                                <div className="text-[2.1vh]">
+                                  {formatDate(dataObject.query.createdAt)}
+                                </div>
+                              </div>
+
+                              <div className="flex flex-col">
+                                <DialogDescription>
+                                  Updated on
+                                </DialogDescription>
+                                <div className="text-[2.1vh]">
+                                  {formatDate(dataObject.query.updatedAt)}
+                                </div>
                               </div>
                             </div>
 
-                            <div className="flex flex-col">
-                              <DialogDescription>Created on</DialogDescription>
-                              <div className="text-[2.1vh]">
-                                {formatDate(dataObject.query.createdAt)}
-                              </div>
-                            </div>
-
-                            <div className="flex flex-col">
-                              <DialogDescription>Updated on</DialogDescription>
-                              <div className="text-[2.1vh]">
-                                {formatDate(dataObject.query.updatedAt)}
-                              </div>
-                            </div>
+                            <Button
+                              className="bg-red-400 hover:bg-red-500 text-white"
+                              onClick={() => handleDelete(dataObject)}
+                              type="submit"
+                            >
+                              Delete
+                            </Button>
                           </div>
 
                           <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
@@ -251,9 +284,7 @@ export default function TableView({ data }: TableViewProps) {
                             <div className="flex items-center justify-center w-full">
                               <Textarea
                                 value={description}
-                                onChange={(e) =>
-                                  setDescription(e.target.value)
-                                }
+                                onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Add a new remark..."
                               />
                             </div>
