@@ -27,17 +27,12 @@ curl --location 'http://127.0.0.1:8080/form-data' --header 'Content-Type: applic
 
 ### Guidelines
 
-- **Tech Stack**: The frontend application should be built using TypeScript/React/Next.js with Mantine as a suggested UI library. The backend application should be built using the existing provided skeleton (Node.js, TypeScript, Prisma, PSQL).
-- **Code Quality**: Please ensure your code is clean, well-organized, and well-documented. Add comments where necessary to explain key decisions.
-- **Time Management**: This is intended to be a 4+ hour assignment. Focus on getting the basic functionality working first, and add optional features if you have time.
-- **(OPTIONAL) API Documentation**: Provide basic API documentation (e.g., using Swagger or in README.md).
-- **(OPTIONAL) Deployment**: If possible, deploy your application to a service like Heroku, Vercel, or Netlify, and share the live URL with us for bonus points!
-
-### Submission Instructions
-
-- Share a GitHub repository with your code and provide instructions for how to run the project locally.
-- (OPTIONAL) If you deploy the application, include the live link in the repository’s README.
-- Ensure that your submission includes clear documentation on how to set up and run the backend and frontend.
+### Notes:
+- App is made with Next.js, so page uses server-side and component uses client-side.
+    - Overhead fetching on server-side, everytime an axios req is made, refetch form and quert data in component
+    - Included API to delete query.
+    - Fully responsive with media queries
+    - Clicking on a formData item row causes it to show full question and answer
 
 ---
 ### Screenshots
