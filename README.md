@@ -40,8 +40,12 @@ curl --location 'http://127.0.0.1:8080/form-data' --header 'Content-Type: applic
 - Ensure that your submission includes clear documentation on how to set up and run the backend and frontend.
 
 ---
-
-We hope you have fun with the assignment and we look forward to hearing from you!
+### Screenshots
+<img width="1461" alt="image" src="https://github.com/user-attachments/assets/04af1cfe-00c8-4a05-b558-247b122098a7" />
+<img width="1457" alt="image" src="https://github.com/user-attachments/assets/233044a9-e025-47a9-a5c8-6bf8b142dcea" />
+<img width="1202" alt="image" src="https://github.com/user-attachments/assets/77811a44-33b4-43ac-886f-8ea8b61fc2ed" />
+<img width="1452" alt="image" src="https://github.com/user-attachments/assets/810f4e1d-fb13-485e-9851-bd6daa549f71" />
+<img width="1451" alt="image" src="https://github.com/user-attachments/assets/19feeea6-10ab-4243-814e-c57ba8eb14d4" />
 
 ### API Documentation
 
