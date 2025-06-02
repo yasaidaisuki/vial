@@ -1,4 +1,8 @@
 # Vial Assignment - Query Management System
+
+![image](https://github.com/user-attachments/assets/17b60175-4022-48a1-8b09-3d0431189a7b)
+
+
 ## Requirements:
 - Node.js, POSTGRESQL, Docker
 - Ensure no active local servers on address 5432 or 8080.
