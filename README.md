@@ -1,5 +1,9 @@
 # take-home-assignment-A
 
+## Requirements:
+- Node.js, POSTGRESQL, Docker
+- Ensure no active local servers on address 5432 or 8080.
+
 ## Getting Started
 - copy the .env.example file into a .env file
 - `docker-compose build`
@@ -25,14 +29,22 @@ curl --location 'http://127.0.0.1:8080/form-data' --header 'Content-Type: applic
 * [PostgreSQL](https://www.postgresql.org/)
 * [Docker and Compose](https://www.docker.com/)
 
+## Extra Technologies:
+* Axios
+* ShadCN (Front-end components & Styling)
+
 ### Guidelines
 
 ### Notes:
 - App is made with Next.js, so page uses server-side and component uses client-side.
-    - Overhead fetching on server-side, everytime an axios req is made, refetch form and quert data in component
-    - Included API to delete query.
-    - Fully responsive with media queries
-    - Clicking on a formData item row causes it to show full question and answer
+    - Overhead fetching on server-side, everytime an axios req is made, refetch form and query data in component
+- Fully responsive with media queries (small, medium, and large screens)
+- Clicking on a row shows the full untruncated question and answer.
+    - Ensures User Experience
+- Backend API Routes are done with Fastify client to provide the routes and abstracted Prisma ORM functions is used to interact with POSTGRESQL
+    - used Prisma to create a queryData schema which generates an abstracted function to perform CRUD on the queryData table on psql.
+    - Extra DELETE functionality available when a query exists
+- API Documentation can be found below
 
 ---
 ### Screenshots
