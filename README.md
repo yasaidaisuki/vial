@@ -1,5 +1,4 @@
-# take-home-assignment-A
-
+# Vial Assignment - Query Management System
 ## Requirements:
 - Node.js, POSTGRESQL, Docker
 - Ensure no active local servers on address 5432 or 8080.
